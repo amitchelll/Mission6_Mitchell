@@ -1,0 +1,19 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model Form
+
+@if (Model.Edited == true)
+{
+    <h1>Thank for you editing the movie @Model.Title</h1>
+    <a asp-area="" asp-controller="Home" asp-action="MovieForm">Edit or submit another movie</a>
+}
+else
+{
+    <h1>Thank for you submitting the movie @Model.Title</h1>
+    <a asp-area="" asp-controller="Home" asp-action="MovieForm">Submit another movie</a>
+}
+
