@@ -62,6 +62,7 @@ namespace Mission6_Mitchell.Controllers
                 .Single(x => x.MovieId == id);
 
             ViewBag.Categories = _context.Categories.ToList();
+            
             return View("MovieForm", recordtoEdit);
         }
 
