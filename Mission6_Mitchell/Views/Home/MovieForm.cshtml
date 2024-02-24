@@ -3,7 +3,7 @@
 *@
 @{
 }
-@model Form
+@model Movie
 
 <div class="text-center">
     <h1 class="display-4">Movie Form</h1>
@@ -12,24 +12,32 @@
 <br />
 <div> 
     <form method="post"> 
-        <label asp-for ="Category">Category:</label><br />
-        <input asp-for="Category" required/> <!--Input is also required in the model but it won't let someone submit unless thre is something for each otherese-->
+
+        <input type="hidden", asp-for="MovieId" />
+
+        <select asp-for="CategoryId">
+            <option value="">Select a Category</option>
+            @foreach (Category c in ViewBag.Categories)
+            {
+                <option value="@c.CategoryId">@c.CategoryName</option>
+            }
+        </select>
         <br />
         <br />
         <label asp-for ="Title">Title:</label><br />
-        <input asp-for="Title" required />
+        <input asp-for="Title"/>
         <br />
         <br />
         <label asp-for="Year">Year:</label><br />
-        <input asp-for="Year" required />
+        <input asp-for="Year"/>
         <br />
         <br />
         <label asp-for="Director">Director:</label><br />
-        <input asp-for="Director" required />
+        <input asp-for="Director"/>
         <br />
         <br />
         <label asp-for="Rating">Rating:</label><br />
-        <select asp-for="Rating" required>
+        <select asp-for="Rating">
             <option value="">Please Select</option>
             <option value="G">G</option>
             <option value="PG">PG</option>
@@ -55,5 +63,7 @@
         <br />
         <br />
         <button type="submit" class="button">Submit</button>
+
+        <div asp-validation-summary="All"></div>
     </form>
 </div>

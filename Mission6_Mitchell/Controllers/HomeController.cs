@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Mission6_Mitchell.Models;
-using System.Diagnostics;
 
 namespace Mission6_Mitchell.Controllers
 {
@@ -24,16 +24,72 @@ namespace Mission6_Mitchell.Controllers
         [HttpGet]
         public IActionResult MovieForm()
         {
-            return View();
+
+            ViewBag.Categories = _context.Categories.ToList();
+            return View("MovieForm", new Movie());
         }
 
         [HttpPost]
-        public IActionResult MovieForm(Form response)
+        public IActionResult MovieForm(Movie response)
         {
-            _context.Forms.Add(response); //Allows the form to pass the information to the database 
+            if (ModelState.IsValid)
+            {
+                _context.Movies.Add(response); //Allows the form to pass the information to the database 
+                _context.SaveChanges();
+
+                return View("Confirmation", response); //Redirects users to a confirmation page & utilizes the response variable to add a custom greeting.
+            }
+            else 
+            {
+                ViewBag.Categories = _context.Categories.ToList();
+                return View(response);
+            }
+
+        }
+
+        public IActionResult Collection() 
+        { 
+            var movies = _context.Movies.Include("Category")
+                .ToList();
+
+            return View(movies);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var recordtoEdit = _context.Movies
+                .Single(x => x.MovieId == id);
+
+            ViewBag.Categories = _context.Categories.ToList();
+            return View("MovieForm", recordtoEdit);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Movie updatedMovie)
+        {
+            _context.Update(updatedMovie);
             _context.SaveChanges();
 
-            return View("Confirmation", response); //Redirects users to a confirmation page & utilizes the response variable to add a custom greeting.
+            return RedirectToAction("Collection");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var recordtoDelete = _context.Movies
+                .Single(x => x.MovieId == id);
+
+            return View(recordtoDelete);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Movie deletedMovie)
+        {
+            _context.Remove(deletedMovie); 
+            _context.SaveChanges();
+
+            return RedirectToAction("Collection");
         }
     }
 }
